@@ -1,0 +1,103 @@
+name: Weather Dashboard CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # ==========================
+    # Checkout Repository
+    # ==========================
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # ==========================
+    # Setup Node.js
+    # ==========================
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    # ==========================
+    # Install Frontend Dependencies
+    # ==========================
+    - name: Install Frontend Packages
+      working-directory: frontend
+      run: npm install
+
+    # ==========================
+    # Build React Application
+    # ==========================
+    - name: Build React App
+      working-directory: frontend
+      run: npm run build
+
+    # ==========================
+    # Setup Python
+    # ==========================
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    # ==========================
+    # Install Backend Packages
+    # ==========================
+    - name: Install Python Packages
+      working-directory: backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # ==========================
+    # Python Syntax Check
+    # ==========================
+    - name: Verify Flask Code
+      working-directory: backend
+      run: python -m py_compile app.py
+
+    # ==========================
+    # Docker Buildx
+    # ==========================
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # ==========================
+    # Build Backend Docker Image
+    # ==========================
+    - name: Build Backend Image
+      run: |
+        docker build -t weather-backend ./backend
+
+    # ==========================
+    # Build Frontend Docker Image
+    # ==========================
+    - name: Build Frontend Image
+      run: |
+        docker build -t weather-frontend ./frontend
+
+    # ==========================
+    # Validate Docker Compose
+    # ==========================
+    - name: Validate Docker Compose
+      run: docker compose config
+
+    # ==========================
+    # Success
+    # ==========================
+    - name: Build Successful
+      run: echo "CI Pipeline Completed Successfully."

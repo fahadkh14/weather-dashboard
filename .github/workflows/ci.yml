@@ -100,4 +100,4 @@ jobs:
     # Success
     # ==========================
     - name: Build Successful
-      run: echo "CI Pipeline Completed Successfully."
+      run: echo "CI Pipeline Completed Successfully." is correct

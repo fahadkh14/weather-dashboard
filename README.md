@@ -130,7 +130,8 @@ DB_PASSWORD=password
 Clone repository
 
 ```bash
-git clone https://github.com/yourusername/weather-dashboard.git
+git clone https://github.com/fahadkh14/weather-dashboard.git
+
 ```
 
 Move into project

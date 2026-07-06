@@ -89,6 +89,19 @@ jobs:
     - name: Build Frontend Image
       run: |
         docker build -t weather-frontend ./frontend
+    # ==========================
+    # Create .env file
+    # ==========================
+    - name: Create .env file
+      run: |
+        cat <<EOF > .env
+        OPENWEATHER_API_KEY=dummy_key
+        DB_HOST=postgres
+        DB_PORT=5432
+        DB_NAME=weather
+        DB_USER=postgres
+        DB_PASSWORD=password
+        EOF    
 
     # ==========================
     # Validate Docker Compose
